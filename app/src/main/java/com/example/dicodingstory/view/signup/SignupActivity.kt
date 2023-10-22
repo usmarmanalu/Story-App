@@ -18,10 +18,6 @@ import kotlinx.coroutines.launch
 
 class SignupActivity : AppCompatActivity() {
 
-//    private lateinit var signupButton: SignupButton
-//    private lateinit var nameEditText: NameEditText
-//    private lateinit var emailEditText: EmailEditText
-//    private lateinit var passwordEditText: PasswordEditText
     private lateinit var binding: ActivitySignupBinding
 
     private val viewModel: SignupViewModel by viewModels {
@@ -41,36 +37,41 @@ class SignupActivity : AppCompatActivity() {
         binding.nameEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
+
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 setMyButtonEnable()
             }
+
             override fun afterTextChanged(s: Editable?) {}
         })
 
         binding.emailEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
+
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 setMyButtonEnable()
             }
+
             override fun afterTextChanged(s: Editable?) {
             }
         })
 
-        binding.passwordEditText.addTextChangedListener(object : TextWatcher{
+        binding.passwordEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
+
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 setMyButtonEnable()
             }
+
             override fun afterTextChanged(s: Editable?) {
             }
         })
     }
 
     private fun setupView() {
-        @Suppress("DEPRECATION")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        @Suppress("DEPRECATION") if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             window.insetsController?.hide(WindowInsets.Type.statusBars())
         } else {
             window.setFlags(
@@ -99,6 +100,7 @@ class SignupActivity : AppCompatActivity() {
                         showErrorDialog(result.error)
                         binding.progressBarSignup.visibility = View.GONE
                     }
+
                     else -> {
                     }
                 }

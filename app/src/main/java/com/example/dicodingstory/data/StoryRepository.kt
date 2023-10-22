@@ -7,7 +7,6 @@ import com.example.dicodingstory.data.pref.UserPreference
 import com.example.dicodingstory.data.response.FileUploadResponse
 import com.example.dicodingstory.data.response.GetAllStoriesResponse
 import com.google.gson.Gson
-import kotlinx.coroutines.flow.first
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -19,43 +18,9 @@ class StoryRepository private constructor(
     private val apiService: ApiService,
     private val userPreference: UserPreference
 ) {
-
-    suspend fun getTokenFromDataStore(): String? {
-        val user = userPreference.getSession().first()
-        return if (user.isLogin) user.token else null
-    }
-
-    suspend fun register(name: String, email: String, password: String): ResultState<Boolean> {
+    suspend fun getStories(token: String): ResultState<GetAllStoriesResponse> {
         return try {
-            apiService.register(name, email, password).message
-            ResultState.Success(true)
-        } catch (e: Exception) {
-            ResultState.Error(e.message ?: "Terjadi Kesalahan")
-        }
-    }
-
-    suspend fun login(email: String, password: String): ResultState<UserModel> {
-        return try {
-            val loginResponse = apiService.login(email, password)
-            if (loginResponse.loginResult != null) {
-                val userModel = UserModel(
-                    email = loginResponse.loginResult.name ?: "",
-                    token = loginResponse.loginResult.token ?: "",
-                    isLogin = true
-                )
-                userPreference.saveSession(userModel)
-                ResultState.Success(userModel)
-            } else {
-                ResultState.Error("Login Gagal")
-            }
-        } catch (e: Exception) {
-            return ResultState.Error(e.message ?: "Terjadi Kesalahan")
-        }
-    }
-
-    suspend fun getStories(): ResultState<GetAllStoriesResponse> {
-        return try {
-            val response = apiService.getStories()
+            val response = apiService.getStories("Bearer $token")
             if (response.isSuccessful) {
                 ResultState.Success(response.body() ?: GetAllStoriesResponse())
             } else {
@@ -76,7 +41,7 @@ class StoryRepository private constructor(
 
     suspend fun logout() = userPreference.logout()
 
-    fun uploadStory(imageFile: File, description: String) = liveData {
+    fun uploadStory(token: String, imageFile: File, description: String) = liveData {
         emit(ResultState.Loading)
         val requestBody = description.toRequestBody("text/plain".toMediaType())
         val requestImageFile = imageFile.asRequestBody("image/jpeg".toMediaType())
@@ -86,7 +51,8 @@ class StoryRepository private constructor(
             requestImageFile
         )
         try {
-            val successResponse = apiService.uploadImage(multipartBody, requestBody)
+            val successResponse =
+                apiService.uploadImage("Bearer $token", multipartBody, requestBody)
             emit(ResultState.Success(successResponse))
         } catch (e: HttpException) {
             val errorBody = e.response()?.errorBody()?.string()

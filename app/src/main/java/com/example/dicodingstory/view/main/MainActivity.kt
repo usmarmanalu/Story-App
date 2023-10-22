@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.getSession().observe(this@MainActivity) { user ->
             if (user != null && user.isLogin) {
-                viewModel.getAllStories()
+                viewModel.getAllStories(user.token)
             }
         }
 

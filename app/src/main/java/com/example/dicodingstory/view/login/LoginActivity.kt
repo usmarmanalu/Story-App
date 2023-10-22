@@ -1,6 +1,5 @@
 package com.example.dicodingstory.view.login
 
-import com.example.dicodingstory.view.main.MainActivity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -15,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.dicodingstory.ViewModelFactory
 import com.example.dicodingstory.data.ResultState
 import com.example.dicodingstory.databinding.ActivityLoginBinding
+import com.example.dicodingstory.view.main.MainActivity
 import com.example.dicodingstory.view.signup.SignupActivity
 import kotlinx.coroutines.launch
 
@@ -91,6 +91,7 @@ class LoginActivity : AppCompatActivity() {
                             show()
                         }
                     }
+
                     else -> {
                     }
                 }

@@ -18,7 +18,7 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
         dataStore.edit { preferences ->
             preferences[EMAIL_KEY] = user.email
             preferences[TOKEN_KEY] = user.token
-            preferences[IS_LOGIN_KEY] = user.isLogin
+            preferences[IS_LOGIN_KEY] = true
         }
     }
 
@@ -34,9 +34,7 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
 
     suspend fun logout() {
         dataStore.edit { preferences ->
-            preferences.remove(EMAIL_KEY)
-            preferences.remove(TOKEN_KEY)
-            preferences[IS_LOGIN_KEY] = false
+            preferences.clear()
         }
     }
 
@@ -45,7 +43,7 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
         private var INSTANCE: UserPreference? = null
 
         private val EMAIL_KEY = stringPreferencesKey("email")
-        private val TOKEN_KEY = stringPreferencesKey("Authorization" + "Bearer")
+        private val TOKEN_KEY = stringPreferencesKey("token")
         private val IS_LOGIN_KEY = booleanPreferencesKey("is_login")
 
         fun getInstance(dataStore: DataStore<Preferences>): UserPreference {

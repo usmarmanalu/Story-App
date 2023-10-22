@@ -1,4 +1,5 @@
 package com.example.dicodingstory.view.signup.custom
+
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
@@ -11,7 +12,6 @@ import android.view.View.OnTouchListener
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
 import com.example.dicodingstory.R
-import com.google.android.material.textfield.TextInputLayout
 
 class EmailEditText : AppCompatEditText, OnTouchListener {
 
@@ -25,7 +25,11 @@ class EmailEditText : AppCompatEditText, OnTouchListener {
         init()
     }
 
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
         init()
     }
 
@@ -37,7 +41,8 @@ class EmailEditText : AppCompatEditText, OnTouchListener {
     }
 
     private fun init() {
-        clearButtonImage = ContextCompat.getDrawable(context, R.drawable.baseline_clear_24) as Drawable
+        clearButtonImage =
+            ContextCompat.getDrawable(context, R.drawable.baseline_clear_24) as Drawable
         setOnTouchListener(this)
 
         addTextChangedListener(object : TextWatcher {
@@ -61,8 +66,18 @@ class EmailEditText : AppCompatEditText, OnTouchListener {
         setButtonDrawables()
     }
 
-    private fun setButtonDrawables(startOfTheText: Drawable? = null, topOfTheText:Drawable? = null, endOfTheText:Drawable? = null, bottomOfTheText: Drawable? = null){
-        setCompoundDrawablesWithIntrinsicBounds(startOfTheText, topOfTheText, endOfTheText, bottomOfTheText)
+    private fun setButtonDrawables(
+        startOfTheText: Drawable? = null,
+        topOfTheText: Drawable? = null,
+        endOfTheText: Drawable? = null,
+        bottomOfTheText: Drawable? = null
+    ) {
+        setCompoundDrawablesWithIntrinsicBounds(
+            startOfTheText,
+            topOfTheText,
+            endOfTheText,
+            bottomOfTheText
+        )
     }
 
     override fun onTouch(v: View?, event: MotionEvent): Boolean {
@@ -85,18 +100,26 @@ class EmailEditText : AppCompatEditText, OnTouchListener {
             if (isClearButtonClicked) {
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
-                        clearButtonImage = ContextCompat.getDrawable(context, R.drawable.baseline_clear_24) as Drawable
+                        clearButtonImage = ContextCompat.getDrawable(
+                            context,
+                            R.drawable.baseline_clear_24
+                        ) as Drawable
                         showClearButton()
                         return true
                     }
+
                     MotionEvent.ACTION_UP -> {
-                        clearButtonImage = ContextCompat.getDrawable(context, R.drawable.baseline_clear_24) as Drawable
+                        clearButtonImage = ContextCompat.getDrawable(
+                            context,
+                            R.drawable.baseline_clear_24
+                        ) as Drawable
                         when {
                             text != null -> text?.clear()
                         }
                         hideClearButton()
                         return true
                     }
+
                     else -> return false
                 }
             } else return false

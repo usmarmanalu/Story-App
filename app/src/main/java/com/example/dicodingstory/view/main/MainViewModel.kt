@@ -13,25 +13,23 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MainViewModel(private val repository: StoryRepository) : ViewModel() {
+
     private val _storiesLiveData = MutableLiveData<ResultState<GetAllStoriesResponse>>()
     val storiesLiveData: LiveData<ResultState<GetAllStoriesResponse>> = _storiesLiveData
 
-    fun getAllStories() {
+    fun getAllStories(token: String) {
         _storiesLiveData.value = ResultState.Loading
         viewModelScope.launch(Dispatchers.IO) {
-            val token = repository.getTokenFromDataStore()
-            if (token != null) {
-                _storiesLiveData.postValue(ResultState.Loading)
-                try {
-                    val response = repository.getStories()
-                    _storiesLiveData.postValue(response)
-                } catch (e: Exception) {
-                    _storiesLiveData.postValue(ResultState.Error(e.message ?: "Terjadi Kesalahan"))
-                }
+            _storiesLiveData.postValue(ResultState.Loading)
+            try {
+                val response = repository.getStories(token)
+                _storiesLiveData.postValue(response)
+            } catch (e: Exception) {
+                _storiesLiveData.postValue(ResultState.Error(e.message ?: "Terjadi Kesalahan"))
             }
+
         }
     }
-
 
     fun logout() {
         viewModelScope.launch {

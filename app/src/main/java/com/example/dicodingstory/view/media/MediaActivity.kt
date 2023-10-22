@@ -32,6 +32,7 @@ class MediaActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMediaBinding
     private lateinit var description: EditText
     private var currentImgUri: Uri? = null
+    private lateinit var token: String
 
     private val viewModel by viewModels<MediaViewModel> {
         ViewModelFactory.getInstance(this)
@@ -111,36 +112,42 @@ class MediaActivity : AppCompatActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
-    private fun uploadStory() = currentImgUri?.let { uri ->
-        val imgFile = uriToFile(uri, this).reduceFileImage()
-        Log.d("Image File", "showImage: ${imgFile.path}")
-        val description = binding.etDesc.text.toString()
+    private fun uploadStory() {
+        currentImgUri?.let { uri ->
+            val imgFile = uriToFile(uri, this).reduceFileImage()
+            val description = binding.etDesc.text.toString()
+            showLoading(true)
 
-        viewModel.uploadStory(imgFile, description).observe(this) { result ->
-            if (result != null) {
-                when (result) {
-                    is ResultState.Loading -> {
-                        showLoading(true)
-                    }
+            viewModel.getSession().observe(this) { user ->
+                token = user.token
+            }
 
-                    is ResultState.Success -> {
-                        showToast(result.data.message)
-                        showLoading(false)
-                        intent = Intent(this, MainActivity::class.java)
-                        intent.flags =
-                            Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                        startActivity(intent)
+            viewModel.uploadStory(token, imgFile, description).observe(this) { result ->
+                if (result != null) {
+                    when (result) {
+                        is ResultState.Loading -> {
+                            showLoading(true)
+                        }
 
-                    }
+                        is ResultState.Success -> {
+                            showToast(result.data.message)
+                            showLoading(false)
+                            intent = Intent(this, MainActivity::class.java)
+                            intent.flags =
+                                Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                            startActivity(intent)
+                            finish()
+                        }
 
-                    is ResultState.Error -> {
-                        showToast(result.error)
-                        showLoading(false)
+                        is ResultState.Error -> {
+                            showToast(result.error)
+                            showLoading(false)
+                        }
                     }
                 }
             }
-        }
-    } ?: showToast(getString(R.string.warning))
+        } ?: showToast(getString(R.string.warning))
+    }
 
     private fun showKeyboard(view: View) {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
