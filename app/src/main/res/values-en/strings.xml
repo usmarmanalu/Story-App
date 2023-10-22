@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">Dicoding Story</string>
+
+    <string name="signup">Sign Up</string>
+    <string name="login">Log In</string>
+    <string name="message_welcome_page">Share your learning experience stories in Dicoding Story. You can also view your friends learning stories here.</string>
+    <string name="title_welcome_page">Welcome to Dicoding Story</string>
+    <string name="title_signup_page">Complete your details below</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="message_login_page">Please enter your data</string>
+    <string name="title_login_page">Ready to share your story?</string>
+    <string name="name">Name</string>
+    <string name="message_main_page">Welcome to Dicoding Story.</string>
+    <string name="greeting">Hello, %1$s,</string>
+    <string name="logout">Log Out</string>
+    <string name="register">Dont have an account? Sign up here</string>
+    <string name="loginButtonClicked">Already have an account? Log In</string>
+    <string name="dicoding_stories">Dicoding Stories</string>
+    <string name="sub_stories">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries but also the leap into electronic typesetting, remaining essentially unchanged.</string>
+    <string name="sudah_punya_akun_login">Already have an account? Log In</string>
+    <string name="warning">Please insert a photo first</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="post">Post</string>
+    <string name="deskripsi">Description</string>
+    <string name="appwidget_text">Image Story</string>
+    <string name="add_widget">Add Widget</string>
+    <string name="app_widget_description">This is an app widget description</string>
+    <string name="empty_text">No Data</string>
+    <string name="setting">Setting</string>
+</resources>

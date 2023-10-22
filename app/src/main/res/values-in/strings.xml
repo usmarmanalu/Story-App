@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">Dicoding Story</string>
+
+    <string name="signup">Daftar</string>
+    <string name="login">Masuk</string>
+    <string name="message_welcome_page">Yuk, Bagikan cerita pengalaman belajarmu di Dicoding Story. Selain itu, Kamu juga bisa melihat Story teman belajarmu disini.</string>
+    <string name="title_welcome_page">Selamat datang di Dicoding Story</string>
+    <string name="title_signup_page">Lengkapi data dirimu di bawah ini ya</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="message_login_page">Masukkan dulu datamu ya</string>
+    <string name="title_login_page">Sudah siap untuk berbagi cerita?</string>
+    <string name="name">Nama</string>
+    <string name="message_main_page">Selamat Datang di Dicoding Story.</string>
+    <string name="greeting">Halo %1$s,</string>
+    <string name="logout">Keluar</string>
+    <string name="register">Belum punya akun? Daftar disini</string>
+    <string name="loginButtonClicked">Sudah punya akun? Login</string>
+    <string name="dicoding_stories">Dicoding Stories</string>
+    <string name="sub_stories">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys
+        standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</string>
+    <string name="sudah_punya_akun_login">Sudah punya akun? Login</string>
+    <string name="warning">Silakan masukkan photo terlebih dahulu</string>
+    <string name="camera">Kamera</string>
+    <string name="gallery">Galleri</string>
+    <string name="post">Post</string>
+    <string name="deskripsi">Deskripsi</string>
+    <string name="appwidget_text">Image Story</string>
+    <string name="add_widget">Add widget</string>
+    <string name="app_widget_description">This is an app widget description</string>
+    <string name="empty_text">No Data</string>
+    <string name="setting">Setting</string>
+</resources>
