@@ -2,7 +2,6 @@ package com.example.dicodingstory.data
 
 import androidx.lifecycle.liveData
 import com.example.dicodingstory.data.api.ApiService
-import com.example.dicodingstory.data.pref.UserModel
 import com.example.dicodingstory.data.pref.UserPreference
 import com.example.dicodingstory.data.response.FileUploadResponse
 import com.example.dicodingstory.data.response.GetAllStoriesResponse
@@ -34,10 +33,6 @@ class StoryRepository private constructor(
     }
 
     fun getSession() = userPreference.getSession()
-
-    suspend fun saveSession(userModel: UserModel) {
-        userPreference.saveSession(userModel)
-    }
 
     suspend fun logout() = userPreference.logout()
 

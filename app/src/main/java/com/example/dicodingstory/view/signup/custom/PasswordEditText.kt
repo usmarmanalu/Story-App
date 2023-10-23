@@ -11,6 +11,8 @@ import androidx.appcompat.widget.AppCompatEditText
 
 class PasswordEditText : AppCompatEditText, View.OnTouchListener {
 
+
+
     constructor(context: Context) : super(context) {
         init()
     }
