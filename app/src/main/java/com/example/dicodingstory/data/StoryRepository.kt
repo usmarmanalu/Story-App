@@ -1,10 +1,15 @@
 package com.example.dicodingstory.data
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.liveData
 import com.example.dicodingstory.data.api.ApiService
 import com.example.dicodingstory.data.pref.UserPreference
 import com.example.dicodingstory.data.response.FileUploadResponse
-import com.example.dicodingstory.data.response.GetAllStoriesResponse
+import com.example.dicodingstory.data.response.ListStoryItem
 import com.google.gson.Gson
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
@@ -17,19 +22,14 @@ class StoryRepository private constructor(
     private val apiService: ApiService,
     private val userPreference: UserPreference
 ) {
-    suspend fun getStories(token: String): ResultState<GetAllStoriesResponse> {
-        return try {
-            val response = apiService.getStories("Bearer $token")
-            if (response.isSuccessful) {
-                ResultState.Success(response.body() ?: GetAllStoriesResponse())
-            } else {
-                val errorMessage = response.errorBody()?.string() ?: "Gagal mengambil data"
-                ResultState.Error(errorMessage)
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            ResultState.Error(e.message ?: "Terjadi Kesalahan")
-        }
+
+    fun getStory(token: String): LiveData<PagingData<ListStoryItem>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 5,
+            ),
+            pagingSourceFactory = { StoryPagingSource("Bearer $token", apiService) }
+        ).liveData
     }
 
     fun getSession() = userPreference.getSession()

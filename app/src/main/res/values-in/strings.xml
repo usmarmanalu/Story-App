@@ -29,5 +29,8 @@
     <string name="add_widget">Add widget</string>
     <string name="app_widget_description">This is an app widget description</string>
     <string name="empty_text">No Data</string>
-    <string name="setting">Setting</string>
+    <string name="setting">Pengaturan</string>
+    <string name="maps">Lokasi</string>
+    <string name="retry">Coba lagi</string>
+
 </resources>

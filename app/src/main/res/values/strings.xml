@@ -30,4 +30,6 @@
     <string name="app_widget_description">This is an app widget description</string>
     <string name="empty_text">No Data</string>
     <string name="setting">Setting</string>
+    <string name="maps">maps</string>
+    <string name="retry">Coba lagi</string>
 </resources>

@@ -15,8 +15,9 @@ class DetailActivity : AppCompatActivity() {
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val storyItem = intent.getParcelableExtra<ListStoryItem>("storyItem")
+        supportActionBar?.title = "Detail Story"
 
+        val storyItem = intent.getParcelableExtra<ListStoryItem>("storyItem")
         storyItem?.let {
             binding.apply {
                 tvName.text = it.name

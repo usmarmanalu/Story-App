@@ -16,9 +16,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dicodingstory.R
 import com.example.dicodingstory.ViewModelFactory
+import com.example.dicodingstory.adapter.LoadingStateAdapter
 import com.example.dicodingstory.adapter.StoriesAdapter
-import com.example.dicodingstory.data.ResultState
 import com.example.dicodingstory.databinding.ActivityMainBinding
+import com.example.dicodingstory.view.maps.MapsActivity
 import com.example.dicodingstory.view.media.MediaActivity
 import com.example.dicodingstory.view.welcome.WelcomeActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -31,18 +32,18 @@ class MainActivity : AppCompatActivity() {
         ViewModelFactory.getInstance(this)
     }
     private lateinit var binding: ActivityMainBinding
-    private lateinit var storiesAdapter: StoriesAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        supportActionBar?.hide()
 
-        val recyclerView = binding.rvStories
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        storiesAdapter = StoriesAdapter()
-        recyclerView.adapter = storiesAdapter
+        val layoutManager = LinearLayoutManager(this)
+        binding.rvStories.layoutManager = layoutManager
 
+        isLoading(true)
+        getDataStory()
         setupView()
 
         setAppLocale("en", resources)
@@ -60,6 +61,12 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
 
+                R.id.maps -> {
+                    val intent = Intent(this, MapsActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+
                 else -> false
             }
         }
@@ -72,32 +79,25 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.getSession().observe(this@MainActivity) { user ->
             if (user != null && user.isLogin) {
-                viewModel.getAllStories(user.token)
+                viewModel.getStory
+                Toast.makeText(this, "Sukses menampilkan data", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Gagal menampilkan data", Toast.LENGTH_SHORT).show()
             }
         }
+    }
 
-        viewModel.storiesLiveData.observe(this) { resultState ->
-            when (resultState) {
-                is ResultState.Loading -> {
-                    binding.progressBar.visibility = View.VISIBLE
-                }
-
-                is ResultState.Success -> {
-                    binding.progressBar.visibility = View.GONE
-                    val response = resultState.data.listStory
-                    Toast.makeText(this@MainActivity, "Sukses Menampilkan Data", Toast.LENGTH_SHORT)
-                        .show()
-                    storiesAdapter.submitList(response)
-
-                }
-
-                is ResultState.Error -> {
-                    binding.progressBar.visibility = View.GONE
-                    Toast.makeText(this@MainActivity, "Gagal Memuat Data", Toast.LENGTH_SHORT)
-                        .show()
-                }
+    private fun getDataStory() {
+        val adapter = StoriesAdapter()
+        binding.rvStories.adapter = adapter.withLoadStateFooter(
+            footer = LoadingStateAdapter {
+                adapter.retry()
             }
+        )
+        viewModel.getStory.observe(this) {
+            adapter.submitData(lifecycle, it)
         }
+        isLoading(false)
     }
 
     private fun setupView() {
@@ -109,6 +109,19 @@ class MainActivity : AppCompatActivity() {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN
             )
         }
+    }
+
+    private fun isLoading(isLoading: Boolean) {
+        binding.progressBar.visibility = if (isLoading) View.GONE else View.VISIBLE
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+    }
+
+    private fun setAppLocale(languageCode: String, resources: Resources) {
+        val locale = Locale(languageCode)
+        Locale.setDefault(locale)
+        val configuration = Configuration(resources.configuration)
+        configuration.setLocale(locale)
+        resources.updateConfiguration(configuration, resources.displayMetrics)
     }
 
     private fun logout() {
@@ -123,13 +136,5 @@ class MainActivity : AppCompatActivity() {
         }
         builder.setNegativeButton("Tidak") { _, _ -> }
         builder.show()
-    }
-
-    private fun setAppLocale(languageCode: String, resources: Resources) {
-        val locale = Locale(languageCode)
-        Locale.setDefault(locale)
-        val configuration = Configuration(resources.configuration)
-        configuration.setLocale(locale)
-        resources.updateConfiguration(configuration, resources.displayMetrics)
     }
 }

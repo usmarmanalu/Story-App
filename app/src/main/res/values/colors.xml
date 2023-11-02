@@ -11,5 +11,20 @@
     <color name="light_blue_600">#FF039BE5</color>
     <color name="light_blue_900">#FF01579B</color>
 
+    <color name="bgbtncamera">#FF3e5c76</color>
+    <color name="bgbtngallery">#FF748cab</color>
+    <color name="bgbtnpost">#FF1d2d44</color>
+    <color name="bgfb">#FFf0ebd8</color>
+    <color name="retry">#FFc72e2c</color>
+
+
+
+
+
+
+
+
+
+
 
 </resources>
