@@ -76,7 +76,7 @@ class MediaActivity : AppCompatActivity() {
 
     private fun allPermissionGranted() =
         ContextCompat.checkSelfPermission(
-            this, REQUIRED_PERMISSION
+            this, REQUIRED_PERMISSION.toString()
         ) == PackageManager.PERMISSION_GRANTED
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -89,7 +89,9 @@ class MediaActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         if (!allPermissionGranted()) {
-            requestPermissionLauncher.launch(arrayOf(REQUIRED_PERMISSION))
+            requestPermissionLauncher.launch(
+                REQUIRED_PERMISSION
+            )
         }
 
         binding.locationCheckbox.setOnCheckedChangeListener { _, isChecked ->
@@ -208,9 +210,13 @@ class MediaActivity : AppCompatActivity() {
         AlertDialog.Builder(this).apply {
             setTitle("Permission Location")
             setMessage("Enable Location?")
-            setPositiveButton("OK") { _, _ ->
+            setPositiveButton("Ok") { _, _ ->
                 val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                 startActivity(intent)
+            }
+            setNegativeButton("Cancel") {dialog,_ ->
+                dialog.dismiss()
+                binding.locationCheckbox.isChecked = false
             }
             create()
             show()
@@ -283,7 +289,11 @@ class MediaActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val REQUIRED_PERMISSION =
-            "${Manifest.permission.CAMERA},${Manifest.permission.ACCESS_FINE_LOCATION},${Manifest.permission.ACCESS_COARSE_LOCATION}"
+        private val REQUIRED_PERMISSION = arrayOf(
+            Manifest.permission.CAMERA,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+
+        )
     }
 }
