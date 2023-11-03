@@ -23,7 +23,6 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 
-@Suppress("NAME_SHADOWING")
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private val viewModel by viewModels<MapsViewModel> {
         ViewModelFactory.getInstance(this)
@@ -34,8 +33,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
 
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)

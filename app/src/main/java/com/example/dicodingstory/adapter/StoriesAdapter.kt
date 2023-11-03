@@ -8,7 +8,6 @@ import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.dicodingstory.data.response.ListStoryItem
@@ -16,7 +15,7 @@ import com.example.dicodingstory.databinding.StoryItemBinding
 import com.example.dicodingstory.view.detail.DetailActivity
 
 class StoriesAdapter :
-    PagingDataAdapter<ListStoryItem, StoriesAdapter.StoryViewHolder>(DiffCallback) {
+    PagingDataAdapter<ListStoryItem, StoriesAdapter.StoryViewHolder>(DIFF_CALLBACK) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StoryViewHolder {
         val binding = StoryItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return StoryViewHolder(binding)
@@ -24,7 +23,7 @@ class StoriesAdapter :
 
     override fun onBindViewHolder(holder: StoryViewHolder, position: Int) {
         val item = getItem(position)
-        if (item!= null) {
+        if (item != null) {
             holder.bind(item)
         }
     }
@@ -56,7 +55,7 @@ class StoriesAdapter :
     }
 
     companion object {
-        private val DiffCallback = object : DiffUtil.ItemCallback<ListStoryItem>() {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ListStoryItem>() {
             override fun areItemsTheSame(oldItem: ListStoryItem, newItem: ListStoryItem): Boolean {
                 return oldItem.id == newItem.id
             }

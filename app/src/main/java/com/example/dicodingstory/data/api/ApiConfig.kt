@@ -1,6 +1,5 @@
 package com.example.dicodingstory.data.api
 
-import com.example.dicodingstory.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

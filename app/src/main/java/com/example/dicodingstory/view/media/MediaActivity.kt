@@ -94,19 +94,6 @@ class MediaActivity : AppCompatActivity() {
             )
         }
 
-        binding.locationCheckbox.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                if (isLocationEnable()) {
-                    enableLocationDialog()
-                }
-                lifecycleScope.launch {
-                    myLastLocation()
-                }
-            } else {
-                includeLocation = null
-            }
-        }
-
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         binding.galleryButton.setOnClickListener { startGallery() }
@@ -119,6 +106,19 @@ class MediaActivity : AppCompatActivity() {
             description.isFocusableInTouchMode = true
             description.requestFocus()
             showKeyboard(description)
+        }
+
+        binding.locationCheckbox.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                if (isLocationEnable()) {
+                    enableLocationDialog()
+                }
+                lifecycleScope.launch {
+                    myLastLocation()
+                }
+            } else {
+                includeLocation = null
+            }
         }
     }
 
@@ -214,7 +214,7 @@ class MediaActivity : AppCompatActivity() {
                 val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                 startActivity(intent)
             }
-            setNegativeButton("Cancel") {dialog,_ ->
+            setNegativeButton("Cancel") { dialog, _ ->
                 dialog.dismiss()
                 binding.locationCheckbox.isChecked = false
             }

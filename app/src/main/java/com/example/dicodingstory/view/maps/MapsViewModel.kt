@@ -4,13 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
 import com.example.dicodingstory.data.MapsRepository
 import com.example.dicodingstory.data.ResultState
 import com.example.dicodingstory.data.pref.UserModel
 import com.example.dicodingstory.data.response.ListStoryItem
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class MapsViewModel(private val repository: MapsRepository) : ViewModel() {
 

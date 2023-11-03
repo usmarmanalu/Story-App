@@ -8,9 +8,9 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.widget.AppCompatEditText
+import com.example.dicodingstory.R
 
 class PasswordEditText : AppCompatEditText, View.OnTouchListener {
-
 
 
     constructor(context: Context) : super(context) {
@@ -53,7 +53,7 @@ class PasswordEditText : AppCompatEditText, View.OnTouchListener {
     private fun validatePasswordLength(password: String) {
         val passwordLength = password.length
         error = if (passwordLength < 8) {
-            "Password harus minimal 8 karakter"
+            context.getString(R.string.msg_password)
         } else {
             null
         }

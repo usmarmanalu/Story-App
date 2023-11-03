@@ -81,8 +81,6 @@ class MainActivity : AppCompatActivity() {
             if (user != null && user.isLogin) {
                 viewModel.getStory
                 Toast.makeText(this, "Sukses menampilkan data", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, "Gagal menampilkan data", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -130,9 +128,9 @@ class MainActivity : AppCompatActivity() {
         resources.updateConfiguration(configuration, resources.displayMetrics)
     }
 
-    private fun showInfoMessage(msg: String) {
+    private fun showInfoMessage(message: String) {
         binding.apply {
-            infoMessage.text = msg
+            infoMessage.text = message
             infoMessage.visibility = View.VISIBLE
         }
     }

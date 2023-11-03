@@ -38,6 +38,7 @@ class ViewModelFactory(
             modelClass.isAssignableFrom(MediaViewModel::class.java) -> {
                 MediaViewModel(repositoryStory) as T
             }
+
             modelClass.isAssignableFrom(MapsViewModel::class.java) -> {
                 MapsViewModel(repositoryMaps) as T
             }
@@ -51,7 +52,7 @@ class ViewModelFactory(
         private var instance: ViewModelFactory? = null
 
         @JvmStatic
-        fun getInstance(context: Context ): ViewModelFactory {
+        fun getInstance(context: Context): ViewModelFactory {
             return instance ?: synchronized(this) {
                 instance ?: ViewModelFactory(
                     Injection.provideAuthRepository(context),

@@ -34,4 +34,6 @@
     <string name="retry">Coba lagi</string>
     <string name="infomessage">Sorry, No data displayed</string>
     <string name="check_permission">Sertakan Lokasi Saat Ini</string>
+    <string name="msg_password">Password must be at least 8 characters</string>
+
 </resources>
