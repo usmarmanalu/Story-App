@@ -31,5 +31,7 @@
     <string name="setting">Setting</string>
     <string name="maps">maps</string>
     <string name="retry">Coba lagi</string>
+    <string name="infomessage">Sorry, No data displayed</string>
+    <string name="check_permission">Include Current Location</string>
 
 </resources>

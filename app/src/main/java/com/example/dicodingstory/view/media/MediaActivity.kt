@@ -1,12 +1,17 @@
 package com.example.dicodingstory.view.media
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Looper
+import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -16,8 +21,11 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.example.dicodingstory.R
 import com.example.dicodingstory.ViewModelFactory
 import com.example.dicodingstory.data.ResultState
@@ -26,25 +34,43 @@ import com.example.dicodingstory.util.getImageUri
 import com.example.dicodingstory.util.reduceFileImage
 import com.example.dicodingstory.util.uriToFile
 import com.example.dicodingstory.view.main.MainActivity
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
+@Suppress("DEPRECATION")
 class MediaActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMediaBinding
     private lateinit var description: EditText
     private var currentImgUri: Uri? = null
     private lateinit var token: String
+    private var includeLocation: Location? = null
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     private val viewModel by viewModels<MediaViewModel> {
         ViewModelFactory.getInstance(this)
     }
 
     private val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted: Boolean ->
-        if (isGranted) {
-            Toast.makeText(this, "Permission request granted", Toast.LENGTH_LONG).show()
-        } else {
-            Toast.makeText(this, "Permission request denied", Toast.LENGTH_LONG).show()
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { isGranted ->
+        when {
+            isGranted[Manifest.permission.ACCESS_FINE_LOCATION] ?: false -> {
+                myLastLocation()
+            }
+
+            isGranted[Manifest.permission.ACCESS_COARSE_LOCATION] ?: false -> {
+                myLastLocation()
+            }
+
+            else -> {
+                binding.locationCheckbox.isChecked = false
+            }
         }
     }
 
@@ -60,10 +86,26 @@ class MediaActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         supportActionBar?.title = "Upload Story"
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         if (!allPermissionGranted()) {
-            requestPermissionLauncher.launch(REQUIRED_PERMISSION)
+            requestPermissionLauncher.launch(arrayOf(REQUIRED_PERMISSION))
         }
+
+        binding.locationCheckbox.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                if (isLocationEnable()) {
+                    enableLocationDialog()
+                }
+                lifecycleScope.launch {
+                    myLastLocation()
+                }
+            } else {
+                includeLocation = null
+            }
+        }
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         binding.galleryButton.setOnClickListener { startGallery() }
         binding.cameraButton.setOnClickListener { startCamera() }
@@ -78,8 +120,10 @@ class MediaActivity : AppCompatActivity() {
         }
     }
 
-    private fun startGallery() {
-        launcherGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+    @Suppress("DEPRECATION")
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     private val launcherGallery = registerForActivityResult(
@@ -93,17 +137,21 @@ class MediaActivity : AppCompatActivity() {
         }
     }
 
-    private fun startCamera() {
-        currentImgUri = getImageUri(this)
-        launcherIntentCamera.launch(currentImgUri)
-    }
-
     private val launcherIntentCamera = registerForActivityResult(
         ActivityResultContracts.TakePicture()
     ) { isSuccess ->
         if (isSuccess) {
             showImage()
         }
+    }
+
+    private fun startGallery() {
+        launcherGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+    }
+
+    private fun startCamera() {
+        currentImgUri = getImageUri(this)
+        launcherIntentCamera.launch(currentImgUri)
     }
 
     private fun showImage() {
@@ -151,6 +199,76 @@ class MediaActivity : AppCompatActivity() {
         } ?: showToast(getString(R.string.warning))
     }
 
+    private fun isLocationEnable(): Boolean {
+        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+    }
+
+    private fun enableLocationDialog() {
+        AlertDialog.Builder(this).apply {
+            setTitle("Permission Location")
+            setMessage("Enable Location?")
+            setPositiveButton("OK") { _, _ ->
+                val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                startActivity(intent)
+            }
+            create()
+            show()
+        }
+    }
+
+    private val locationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            includeLocation = locationResult.lastLocation
+        }
+    }
+
+    private fun newLocation() {
+        val location = LocationRequest()
+        location.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        location.interval = TimeUnit.SECONDS.toMillis(1)
+        location.fastestInterval = 0
+        location.numUpdates = 1
+        if (ActivityCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        )
+
+            Looper.myLooper()?.let {
+                fusedLocationClient.requestLocationUpdates(
+                    location, locationCallback, it
+                )
+            }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun myLastLocation() {
+        if (ContextCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+                if (location != null) {
+                    includeLocation = location
+                } else {
+                    Toast.makeText(this, "An error occurred", Toast.LENGTH_SHORT).show()
+                    newLocation()
+                }
+            }
+        } else {
+            requestPermissionLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
+        }
+    }
+
     private fun showKeyboard(view: View) {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
@@ -165,6 +283,7 @@ class MediaActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val REQUIRED_PERMISSION = Manifest.permission.CAMERA
+        private const val REQUIRED_PERMISSION =
+            "${Manifest.permission.CAMERA},${Manifest.permission.ACCESS_FINE_LOCATION},${Manifest.permission.ACCESS_COARSE_LOCATION}"
     }
 }

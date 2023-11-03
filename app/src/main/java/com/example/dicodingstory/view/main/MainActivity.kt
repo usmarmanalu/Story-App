@@ -94,10 +94,16 @@ class MainActivity : AppCompatActivity() {
                 adapter.retry()
             }
         )
-        viewModel.getStory.observe(this) {
-            adapter.submitData(lifecycle, it)
+        viewModel.getStory.observe(this) { pagingData ->
+            if (pagingData != null) {
+                adapter.submitData(lifecycle, pagingData)
+                isLoading(false)
+                hideInfoMessage()
+            } else {
+                isLoading(true)
+                showInfoMessage("Maaf, Cerita tidak tersedia")
+            }
         }
-        isLoading(false)
     }
 
     private fun setupView() {
@@ -122,6 +128,17 @@ class MainActivity : AppCompatActivity() {
         val configuration = Configuration(resources.configuration)
         configuration.setLocale(locale)
         resources.updateConfiguration(configuration, resources.displayMetrics)
+    }
+
+    private fun showInfoMessage(msg: String) {
+        binding.apply {
+            infoMessage.text = msg
+            infoMessage.visibility = View.VISIBLE
+        }
+    }
+
+    private fun hideInfoMessage() {
+        binding.infoMessage.visibility = View.GONE
     }
 
     private fun logout() {

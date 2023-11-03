@@ -5,7 +5,7 @@
         android:menuCategory="container">
         <item
             android:id="@+id/maps"
-            android:icon="@drawable/icon_maps"
+            android:icon="@drawable/maps_icon"
             app:showAsAction="ifRoom"
             android:title="@string/maps" />
         <item

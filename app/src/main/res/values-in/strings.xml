@@ -32,5 +32,7 @@
     <string name="setting">Pengaturan</string>
     <string name="maps">Lokasi</string>
     <string name="retry">Coba lagi</string>
+    <string name="infomessage">Maaf, Tidak ada data yang ditampilkan</string>
+    <string name="check_permission">Sertakan Lokasi Saat Ini</string>
 
 </resources>

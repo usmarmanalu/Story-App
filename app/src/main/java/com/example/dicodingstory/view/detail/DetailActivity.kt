@@ -16,6 +16,7 @@ class DetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         supportActionBar?.title = "Detail Story"
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val storyItem = intent.getParcelableExtra<ListStoryItem>("storyItem")
         storyItem?.let {
@@ -27,5 +28,11 @@ class DetailActivity : AppCompatActivity() {
                     .into(ivDetail)
             }
         }
+    }
+
+    @Suppress("DEPRECATION")
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 }
