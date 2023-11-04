@@ -33,41 +33,57 @@ class SignupActivity : AppCompatActivity() {
         setupAction()
         setMyButtonEnable()
 
+        binding.apply {
+            nameEditText.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
 
-        binding.nameEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    setMyButtonEnable()
+                }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                setMyButtonEnable()
-            }
+                override fun afterTextChanged(s: Editable?) {}
+            })
 
-            override fun afterTextChanged(s: Editable?) {}
-        })
+            emailEditText.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
 
-        binding.emailEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    setMyButtonEnable()
+                }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                setMyButtonEnable()
-            }
+                override fun afterTextChanged(s: Editable?) {
+                }
+            })
 
-            override fun afterTextChanged(s: Editable?) {
-            }
-        })
+            passwordEditText.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
 
-        binding.passwordEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    setMyButtonEnable()
+                }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                setMyButtonEnable()
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-            }
-        })
+                override fun afterTextChanged(s: Editable?) {
+                }
+            })
+        }
     }
 
     private fun setupView() {

@@ -74,10 +74,9 @@ class MediaActivity : AppCompatActivity() {
         }
     }
 
-    private fun allPermissionGranted() =
-        ContextCompat.checkSelfPermission(
-            this, REQUIRED_PERMISSION.toString()
-        ) == PackageManager.PERMISSION_GRANTED
+    private fun allPermissionGranted() = ContextCompat.checkSelfPermission(
+        this, REQUIRED_PERMISSION.toString()
+    ) == PackageManager.PERMISSION_GRANTED
 
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,7 +84,7 @@ class MediaActivity : AppCompatActivity() {
         binding = ActivityMediaBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        supportActionBar?.title = "Upload Story"
+        supportActionBar?.title = getString(R.string.upload_story)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         if (!allPermissionGranted()) {
@@ -96,15 +95,20 @@ class MediaActivity : AppCompatActivity() {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        binding.galleryButton.setOnClickListener { startGallery() }
-        binding.cameraButton.setOnClickListener { startCamera() }
-        binding.uploadButton.setOnClickListener { uploadStory() }
+        binding.apply {
+            galleryButton.setOnClickListener { startGallery() }
+            cameraButton.setOnClickListener { startCamera() }
+            uploadButton.setOnClickListener { uploadStory() }
+        }
+
 
         description = findViewById(R.id.et_desc)
         description.setOnClickListener {
-            description.isFocusable = true
-            description.isFocusableInTouchMode = true
-            description.requestFocus()
+            description.apply {
+                isFocusable = true
+                isFocusableInTouchMode = true
+                requestFocus()
+            }
             showKeyboard(description)
         }
 
@@ -122,9 +126,8 @@ class MediaActivity : AppCompatActivity() {
         }
     }
 
-    @Suppress("DEPRECATION")
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
+        onBackPressedDispatcher.onBackPressed()
         return true
     }
 
@@ -231,10 +234,13 @@ class MediaActivity : AppCompatActivity() {
 
     private fun newLocation() {
         val location = LocationRequest()
-        location.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        location.interval = TimeUnit.SECONDS.toMillis(1)
-        location.fastestInterval = 0
-        location.numUpdates = 1
+        location.apply {
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+            interval = TimeUnit.SECONDS.toMillis(1)
+            fastestInterval = 0
+            numUpdates = 1
+        }
+
         if (ActivityCompat.checkSelfPermission(
                 this, Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
@@ -293,7 +299,6 @@ class MediaActivity : AppCompatActivity() {
             Manifest.permission.CAMERA,
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION
-
         )
     }
 }

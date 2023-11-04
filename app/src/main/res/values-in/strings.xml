@@ -35,5 +35,10 @@
     <string name="infomessage">Maaf, Tidak ada data yang ditampilkan</string>
     <string name="check_permission">Sertakan Lokasi Saat Ini</string>
     <string name="msg_password">Password harus minimal 8 karakter</string>
+    <string name="detail_story">Detail Story</string>
+    <string name="lokasi">Lokasi</string>
+    <string name="upload_story">Upload Story</string>
+    <string name="images">images</string>
+    <string name="scroll_up">Kembali ke atas</string>
 
 </resources>

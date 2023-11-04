@@ -3,6 +3,7 @@ package com.example.dicodingstory.view.detail
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.example.dicodingstory.R
 import com.example.dicodingstory.data.response.ListStoryItem
 import com.example.dicodingstory.databinding.ActivityDetailBinding
 
@@ -15,7 +16,7 @@ class DetailActivity : AppCompatActivity() {
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        supportActionBar?.title = "Detail Story"
+        supportActionBar?.title = getString(R.string.detail_story)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val storyItem = intent.getParcelableExtra<ListStoryItem>("storyItem")
@@ -30,9 +31,8 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-    @Suppress("DEPRECATION")
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
+        onBackPressedDispatcher.onBackPressed()
         return true
     }
 }

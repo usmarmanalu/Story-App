@@ -36,7 +36,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        supportActionBar?.title = "Lokasi"
+        supportActionBar?.title = getString(R.string.lokasi)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val mapFragment = supportFragmentManager
@@ -46,9 +46,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     }
 
-    @Suppress("DEPRECATION")
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
+        onBackPressedDispatcher.onBackPressed()
         return true
     }
 

@@ -32,8 +32,10 @@ class StoriesAdapter :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: ListStoryItem) {
-            binding.storyTitle.text = item.name
-            binding.storySubtitle.text = item.description
+            binding.apply {
+                storyName.text = item.name
+                storyDesc.text = item.description
+            }
 
             Glide.with(binding.root)
                 .load(item.photoUrl)
@@ -43,9 +45,9 @@ class StoriesAdapter :
                 val optionsCompat: ActivityOptionsCompat =
                     ActivityOptionsCompat.makeSceneTransitionAnimation(
                         itemView.context as Activity,
-                        Pair(binding.storyImage, "image"),
-                        Pair(binding.storyTitle, "name"),
-                        Pair(binding.storySubtitle, "desc")
+                        Pair(binding.storyImage, STORY_IMAGE),
+                        Pair(binding.storyName, STORY_NAME),
+                        Pair(binding.storyDesc, STORY_DESCRIPTION)
                     )
                 val intent = Intent(itemView.context, DetailActivity::class.java)
                 intent.putExtra("storyItem", item)
@@ -67,5 +69,9 @@ class StoriesAdapter :
                 return oldItem == newItem
             }
         }
+        private const val STORY_IMAGE = "image"
+        private const val STORY_NAME = "name"
+        private const val STORY_DESCRIPTION = "desc"
+
     }
 }

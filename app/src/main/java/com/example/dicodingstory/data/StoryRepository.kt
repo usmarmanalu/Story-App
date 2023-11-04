@@ -1,4 +1,4 @@
-package com.example.dicodingstory.data
+    package com.example.dicodingstory.data
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData

@@ -14,6 +14,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.dicodingstory.R
 import com.example.dicodingstory.ViewModelFactory
 import com.example.dicodingstory.adapter.LoadingStateAdapter
@@ -32,6 +33,7 @@ class MainActivity : AppCompatActivity() {
         ViewModelFactory.getInstance(this)
     }
     private lateinit var binding: ActivityMainBinding
+    private var isScrollingUp = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +47,7 @@ class MainActivity : AppCompatActivity() {
         isLoading(true)
         getDataStory()
         setupView()
+        isScrolUp()
 
         setAppLocale("en", resources)
         setAppLocale("in", resources)
@@ -87,11 +90,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun getDataStory() {
         val adapter = StoriesAdapter()
-        binding.rvStories.adapter = adapter.withLoadStateFooter(
-            footer = LoadingStateAdapter {
-                adapter.retry()
-            }
-        )
+        binding.rvStories.adapter = adapter.withLoadStateFooter(footer = LoadingStateAdapter {
+            adapter.retry()
+        })
         viewModel.getStory.observe(this) { pagingData ->
             if (pagingData != null) {
                 adapter.submitData(lifecycle, pagingData)
@@ -116,8 +117,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun isLoading(isLoading: Boolean) {
-        binding.progressBar.visibility = if (isLoading) View.GONE else View.VISIBLE
-        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        binding.apply {
+            progressBar.visibility = if (isLoading) View.GONE else View.VISIBLE
+            progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
     }
 
     private fun setAppLocale(languageCode: String, resources: Resources) {
@@ -137,6 +140,26 @@ class MainActivity : AppCompatActivity() {
 
     private fun hideInfoMessage() {
         binding.infoMessage.visibility = View.GONE
+    }
+
+    private fun isScrolUp() {
+        binding.apply {
+            rvStories.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    if (dy > 50 && !isScrollingUp) {
+                        isScrollingUp = true
+                        binding.scrollUp.visibility = View.VISIBLE
+                    } else if (dy < 0 && isScrollingUp) {
+                        isScrollingUp = false
+                        binding.scrollUp.visibility = View.GONE
+                    }
+                }
+            })
+            scrollUp.setOnClickListener {
+                binding.rvStories.smoothScrollToPosition(0)
+            }
+        }
     }
 
     private fun logout() {
