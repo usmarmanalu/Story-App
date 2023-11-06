@@ -39,5 +39,8 @@
     <string name="upload_story">Upload Story</string>
     <string name="images">images</string>
     <string name="scroll_up">Scroll Up</string>
+    <string name="longitude">longitude</string>
+    <string name="lattitude">lattitude</string>
+    <string name="create">create</string>
 
 </resources>
